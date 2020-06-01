@@ -86,7 +86,6 @@ router.delete('/users/me', auth, async (req, res) => {
 })
 
 const upload = multer({
-    dest: 'magicLand',
     limits: {
         fileSize: 1000000
     },
@@ -98,10 +97,22 @@ const upload = multer({
         cb(undefined, true)
     }
 })
-router.post('/users/me/magicLand', upload.single('magicLand'), (req, res) => {
+router.post('/users/me/magicLand',auth, upload.single('magicLand'), async (req, res) => {
+    req.user.magicLand = req.file.buffer
+
+    await req.user.save()
+
     res.send()
 }, (error, req, res, next) => {
     res.status(400).send({ error: error.message })
+})
+
+router.delete('/users/me/magicLand', auth, async (req, res) => {
+    req.user.magicLand = undefined
+    
+    await req.user.save()
+
+    res.send()
 })
 
 module.exports = router
