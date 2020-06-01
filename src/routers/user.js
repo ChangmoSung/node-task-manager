@@ -1,8 +1,9 @@
 const express = require('express')
 const User = require('../models/user')
 const auth = require('../middleware/auth')
-const router = new express.Router()
 const multer = require('multer')
+const sharp = require('sharp')
+const router = new express.Router()
 
 router.post('/users', async (req, res) => {
     const user = new User(req.body)
@@ -97,8 +98,11 @@ const upload = multer({
         cb(undefined, true)
     }
 })
+
 router.post('/users/me/magicLand',auth, upload.single('magicLand'), async (req, res) => {
-    req.user.magicLand = req.file.buffer
+    const buffer = await sharp(req.file.buffer).resize({ width: 300, height: 300 }).png().toBuffer()
+
+    req.user.magicLand = buffer
 
     await req.user.save()
 
@@ -121,7 +125,7 @@ router.get('/users/:id/magicLand', async(req, res) => {
 
         if(!user || !user.magicLand) throw new Error()
 
-        res.set('Content-Type', 'image/jpg')
+        res.set('Content-Type', 'image/png')
 
         res.send(user.magicLand)
     } catch(e) {
