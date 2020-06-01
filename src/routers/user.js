@@ -109,10 +109,24 @@ router.post('/users/me/magicLand',auth, upload.single('magicLand'), async (req, 
 
 router.delete('/users/me/magicLand', auth, async (req, res) => {
     req.user.magicLand = undefined
-    
+
     await req.user.save()
 
     res.send()
+})
+
+router.get('/users/:id/magicLand', async(req, res) => {
+    try {
+        const user = await User.findById(req.params.id)
+
+        if(!user || !user.magicLand) throw new Error()
+
+        res.set('Content-Type', 'image/jpg')
+
+        res.send(user.magicLand)
+    } catch(e) {
+        res.status(400).sned()
+    }
 })
 
 module.exports = router
