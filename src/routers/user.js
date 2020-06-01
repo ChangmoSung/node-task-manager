@@ -2,6 +2,7 @@ const express = require('express')
 const User = require('../models/user')
 const auth = require('../middleware/auth')
 const router = new express.Router()
+const multer = require('multer')
 
 router.post('/users', async (req, res) => {
     const user = new User(req.body)
@@ -82,6 +83,13 @@ router.delete('/users/me', auth, async (req, res) => {
     } catch (e) {
         res.status(500).send()
     }
+})
+
+const upload = multer({
+    dest: 'magicLand'
+})
+router.post('/users/me/magicLand', upload.single('magicLand'), (req, res) => {
+    res.send()
 })
 
 module.exports = router
