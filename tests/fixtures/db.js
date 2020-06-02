@@ -34,14 +34,14 @@ const taskOne = {
 
 const taskTwo = {
     _id: new mongoose.Types.ObjectId(),
-    description: 'second task',
+    description: 'Second task',
     completed: true,
     owner: userOneId
 }
 
 const taskThree = {
     _id: new mongoose.Types.ObjectId(),
-    description: 'third task',
+    description: 'Third task',
     completed: true,
     owner: userTwoId
 }
